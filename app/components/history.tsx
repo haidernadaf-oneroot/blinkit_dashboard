@@ -130,7 +130,7 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
 
         <div className="bg-white rounded-2xl shadow border overflow-hidden">
           <table className="w-full">
-            <thead className="bg-gray-100 text-sm">
+            <thead className="bg-gray-200 text-sm">
               <tr>
                 <th className="p-4 text-left">Truck</th>
                 <th className="p-4 text-left">Date</th>
@@ -156,10 +156,12 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
               ) : (
                 trucks.map((truck) => (
                   <tr key={truck._id} className="border-t hover:bg-gray-50">
-                    <td className="p-4 font-semibold">{truck.truck_number}</td>
-                    <td className="p-4">{truck.date}</td>
-                    <td className="p-4">{truck.totalApproved}</td>
-                    <td className="p-4">
+                    <td className="p-4 font-semibold text-black">
+                      {truck.truck_number}
+                    </td>
+                    <td className="p-4 text-black">{truck.date}</td>
+                    <td className="p-4 text-black">{truck.totalApproved}</td>
+                    <td className="p-4 text-black">
                       {truck.sqsCountComplete ? (
                         <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
                           Completed

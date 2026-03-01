@@ -635,7 +635,7 @@ export default function DashboardPage() {
         <div className="min-h-screen bg-gray-50/50">
           <div className="max-w-7xl mx-auto p-6">
             {/* Header */}
-            <div className="bg-white rounded-2xl shadow p-6 flex justify-between items-center mb-8">
+            <div className="bg-white border-2 border-gray-200 rounded-2xl shadow p-6 flex justify-between items-center mb-8">
               <h1 className="text-3xl font-bold">Dashboard</h1>
 
               <div className="flex gap-3">
@@ -676,12 +676,12 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Truck Input + Buttons */}
-                <div className="bg-white p-4 rounded-xl shadow">
+                <div className="bg-white p-4 rounded-xl border-2 border-gray-200 shadow">
                   <input
                     placeholder="Enter Truck Number"
                     value={truckNumber}
                     onChange={(e) => setTruckNumber(e.target.value)}
-                    className="w-full border p-3 rounded-lg mb-4"
+                    className="w-full border p-3 rounded-lg mb-4 text-black"
                   />
 
                   <div className="flex gap-4">
@@ -705,7 +705,7 @@ export default function DashboardPage() {
               </div>
 
               {/* RIGHT SIDE - LIVE STATS */}
-              <div className="bg-white rounded-2xl shadow p-6">
+              <div className="bg-white rounded-2xl border-4 border-gray-200  shadow-2xl p-6">
                 <h2 className="text-lg font-semibold mb-4">Live Stats</h2>
 
                 <table className="w-full text-sm">
@@ -728,12 +728,14 @@ export default function DashboardPage() {
                     ) : (
                       liveData.map((item) => (
                         <tr key={item._id} className="border-t">
-                          <td className="p-3 font-semibold">
+                          <td className="p-3 font-semibold text-black">
                             {item.truck_number}
                           </td>
-                          <td className="p-3">{item.date}</td>
-                          <td className="p-3">{item.totalApproved}</td>
-                          <td className="p-3">
+                          <td className="p-3 text-black">{item.date}</td>
+                          <td className="p-3 text-black">
+                            {item.totalApproved}
+                          </td>
+                          <td className="p-3 text-black">
                             {item.sqsCountComplete ? (
                               <span className="text-green-600 font-medium">
                                 Completed

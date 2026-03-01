@@ -125,20 +125,22 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-100">
-      <div className="bg-white p-8 rounded-3xl shadow w-[380px]">
+      <div className="bg-white p-8 rounded-3xl shadow w-[380px] text-gray-800">
         <div className="flex flex-col items-center mb-6">
-          <div className="bg-yellow-400 w-20 h-20 rounded-2xl flex items-center justify-center text-xl font-bold">
+          <div className="bg-yellow-400 w-20 h-20 rounded-2xl flex items-center justify-center text-xl font-bold text-black">
             blinkit
           </div>
 
-          <h1 className="text-xl font-semibold mt-4">Operator Login</h1>
-          <p className="text-sm text-gray-500">Secure Logistics Access</p>
+          <h1 className="text-xl font-semibold mt-4 text-gray-900">
+            Operator Login
+          </h1>
+          <p className="text-sm text-gray-600">Secure Logistics Access</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             placeholder="Username"
-            className="w-full border p-3 rounded-xl"
+            className="w-full border border-gray-300 p-3 rounded-xl text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -147,7 +149,7 @@ export default function LoginPage() {
           <input
             type="password"
             placeholder="Password"
-            className="w-full border p-3 rounded-xl"
+            className="w-full border border-gray-300 p-3 rounded-xl text-black placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -162,7 +164,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-yellow-400 p-3 rounded-xl font-semibold disabled:opacity-50"
+            className="w-full bg-yellow-400 text-black p-3 rounded-xl font-semibold disabled:opacity-50"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
