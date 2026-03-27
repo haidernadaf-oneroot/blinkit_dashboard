@@ -77,7 +77,7 @@ export default function DashboardPage() {
 
     try {
       const res = await fetch(
-        "https://counting-dashboard-backend.onrender.com/totals/counts",
+        "https://counting-dashboard-backend-pd3y.onrender.com/totals/counts",
         {
           headers: getAuthHeaders(),
           cache: "no-store",

@@ -42,7 +42,7 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
       if (!API_BASE_URL) throw new Error("API not configured");
 
       const res = await fetch(
-        "https://counting-dashboard-backend.onrender.com/totals/counts",
+        "https://counting-dashboard-backend-pd3y.onrender.com/totals/counts",
         {
           method: "GET",
           headers: getAuthHeaders(),
