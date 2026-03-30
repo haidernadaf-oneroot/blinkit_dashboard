@@ -48,11 +48,14 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
     try {
       if (!API_BASE_URL) throw new Error("API not configured");
 
-      const res = await fetch("http://localhost:5000/totals/counts", {
-        method: "GET",
-        headers: getAuthHeaders(),
-        cache: "no-store",
-      });
+      const res = await fetch(
+        "https://counting-dashboard-backend-pd3y.onrender.com/totals/counts",
+        {
+          method: "GET",
+          headers: getAuthHeaders(),
+          cache: "no-store",
+        },
+      );
 
       if (!res.ok) throw new Error("Failed to fetch trucks");
 
@@ -106,17 +109,19 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
         doc.setFontSize(10);
 
         doc.setFillColor(255, 255, 255);
-        doc.roundedRect(14, 58, pageWidth - 28, 48, 8, 8, "F");
+        doc.roundedRect(14, 58, pageWidth - 28, 64, 8, 8, "F");
 
         doc.setTextColor(107, 114, 128);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(10);
         doc.text("TRUCK NUMBER", 22, 74);
-        doc.text("GENERATED AT", 22, 94);
+        doc.text("SESSION DATE", 22, 94);
+        doc.text("GENERATED AT", 22, 114);
 
         doc.setTextColor(17, 24, 39);
         doc.setFontSize(16);
         doc.text(String(truck.truck_number), 90, 74);
+        doc.text(formatDate(truck.date), 90, 94);
         doc.text(
           generatedAt.toLocaleString("en-IN", {
             day: "2-digit",
@@ -126,37 +131,37 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
             minute: "2-digit",
           }),
           90,
-          94,
+          114,
         );
 
         doc.setFillColor(255, 255, 255);
-        doc.roundedRect(14, 116, pageWidth - 28, 52, 8, 8, "F");
+        doc.roundedRect(14, 132, pageWidth - 28, 52, 8, 8, "F");
         doc.setTextColor(107, 114, 128);
         doc.setFontSize(10);
-        doc.text("COUNT BREAKDOWN", 22, 130);
+        doc.text("COUNT BREAKDOWN", 22, 146);
 
         doc.setTextColor(17, 24, 39);
         doc.setFontSize(13);
-        doc.text(`Manual Error Ai Analysis Count`, 22, 145);
-        doc.text(String(approvedCount), pageWidth - 22, 145, {
+        doc.text(`Manual Error Ai Analysis Count`, 22, 161);
+        doc.text(String(approvedCount), pageWidth - 22, 161, {
           align: "right",
         });
-        doc.text(`Total Analysis Count`, 22, 157);
-        doc.text(String(sqsCount), pageWidth - 22, 157, { align: "right" });
+        doc.text(`Total Analysis Count`, 22, 173);
+        doc.text(String(sqsCount), pageWidth - 22, 173, { align: "right" });
 
         doc.setFillColor(22, 163, 74);
-        doc.roundedRect(14, 178, pageWidth - 28, 34, 8, 8, "F");
+        doc.roundedRect(14, 194, pageWidth - 28, 34, 8, 8, "F");
         doc.setTextColor(255, 255, 255);
         doc.setFont("helvetica", "bold");
         doc.setFontSize(11);
-        doc.text("FINAL TOTAL COUNT", 22, 192);
+        doc.text("FINAL TOTAL COUNT", 22, 208);
         doc.setFontSize(22);
-        doc.text(String(finalTotal), pageWidth - 22, 194, { align: "right" });
+        doc.text(String(finalTotal), pageWidth - 22, 210, { align: "right" });
 
         doc.setTextColor(107, 114, 128);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        doc.text("Generated for completed truck session records.", 14, 228);
+        doc.text("Generated for completed truck session records.", 14, 244);
         doc.save(`Truck-${truck.truck_number}.pdf`);
       };
     } catch (err) {
