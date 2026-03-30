@@ -329,7 +329,7 @@ export default function DashboardPage() {
             </div>
           </section> */}
 
-          <section className="mt-8 rounded-[22px] border border-[#f4e3a4] bg-[#fffdf5] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
+          {/* <section className="mt-8 rounded-[22px] border border-[#f4e3a4] bg-[#fffdf5] p-4 shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-4">
                 <div className="rounded-2xl bg-[#ffd240] p-3 text-[#10915e]">
@@ -350,7 +350,7 @@ export default function DashboardPage() {
                 New Entry
               </button>
             </div>
-          </section>
+          </section> */}
 
           <section className="mt-8 overflow-hidden rounded-[22px] border border-black/10 bg-white shadow-[0_10px_30px_rgba(0,0,0,0.03)]">
             <div className="px-6 py-5">
