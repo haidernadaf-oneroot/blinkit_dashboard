@@ -30,14 +30,18 @@ export default function DashboardPage() {
   const [showHistoryPage, setShowHistoryPage] = useState(false);
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [truckNumber, setTruckNumber] = useState("");
+  const [startedTruckNumber, setStartedTruckNumber] = useState("");
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [liveData, setLiveData] = useState<TruckData[]>([]);
+  const [computerVisionCount, setComputerVisionCount] = useState(0);
 
   const activeLiveData = liveData.filter((item) => !item.sqsCountComplete);
   const latestTruck = activeLiveData[0];
-  const liveCount = Number(latestTruck?.totalApproved || 0);
-  const currentTruckNumber = truckNumber || latestTruck?.truck_number || "1234";
+  const activeTruckNumber =
+    startedTruckNumber || latestTruck?.truck_number || "";
+  const liveCount = computerVisionCount;
+  const currentTruckNumber = activeTruckNumber || "1234";
   const currentStatus = latestTruck ? "UNLOADING" : "STOPPED";
 
   const getAuthHeaders = useCallback(() => {
@@ -79,17 +83,15 @@ export default function DashboardPage() {
     if (!API_BASE_URL) return;
 
     try {
-      const res = await fetch(
-        "https://counting-dashboard-backend-pd3y.onrender.com/totals/counts",
-        {
-          headers: getAuthHeaders(),
-          cache: "no-store",
-        },
-      );
+      const res = await fetch(`${API_BASE_URL}/count`, {
+        headers: getAuthHeaders(),
+        cache: "no-store",
+      });
 
       if (!res.ok) return;
 
       const data = await res.json();
+      setComputerVisionCount(Number(data.count) || 0);
       setLiveData(data.data || []);
     } catch (err) {
       console.error("Live stats error:", err);
@@ -154,6 +156,7 @@ export default function DashboardPage() {
         headers: getAuthHeaders(),
       });
 
+      setStartedTruckNumber(truckNumber.trim());
       alert("Recording Started");
       fetchLiveStats();
     } catch (err) {
@@ -184,7 +187,8 @@ export default function DashboardPage() {
     }
   };
 
-  const handleOpenVideo = () => {
+  const handleOpenVideo = async () => {
+    await fetchYoutubeLink();
     setShowVideoModal(true);
   };
 
@@ -280,7 +284,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="flex flex-wrap items-center gap-4">
-                {/* <label className="min-w-[220px] flex-1 lg:flex-none">
+                <label className="min-w-[220px] flex-1 lg:flex-none">
                   <span className="mb-2 block text-sm font-medium text-[#6b7280]">
                     Truck Number
                   </span>
@@ -290,7 +294,7 @@ export default function DashboardPage() {
                     onChange={(e) => setTruckNumber(e.target.value)}
                     className="w-full rounded-2xl border border-black/10 bg-[#fafafa] px-4 py-3 text-base outline-none transition focus:border-[#ffd240] focus:bg-white"
                   />
-                </label> */}
+                </label>
 
                 <button
                   onClick={handleStart}
@@ -367,7 +371,7 @@ export default function DashboardPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {activeLiveData.length === 0 ? (
+                  {!activeTruckNumber ? (
                     <tr>
                       <td
                         colSpan={4}
@@ -377,33 +381,31 @@ export default function DashboardPage() {
                       </td>
                     </tr>
                   ) : (
-                    activeLiveData.map((item) => (
-                      <tr
-                        key={item._id}
-                        className="border-t border-black/5 bg-[#fffef9]"
-                      >
-                        <td className="px-6 py-5">
-                          <button
-                            onClick={handleOpenVideo}
-                            className="inline-flex items-center gap-2 rounded-2xl border border-black/10 bg-white px-4 py-2 text-[18px] font-medium text-[#ff5148] shadow-sm transition hover:border-[#ffb5b0] hover:bg-[#fff6f5]"
-                          >
-                            <Play size={15} fill="currentColor" />
-                            Watch Live
-                          </button>
-                        </td>
-                        <td className="px-6 py-5 text-[18px] text-[#2c2c2c]">
-                          {item.truck_number}
-                        </td>
-                        <td className="px-6 py-5 text-[22px] font-semibold text-[#f4bf22]">
-                          {item.totalApproved}
-                        </td>
-                        <td className="px-6 py-5">
-                          <span className="rounded-full border border-black/60 px-4 py-1.5 text-[15px] text-[#2c2c2c]">
-                            {item.sqsCountComplete ? "Completed" : "Unloading"}
-                          </span>
-                        </td>
-                      </tr>
-                    ))
+                    <tr className="border-t border-black/5 bg-[#fffef9]">
+                      <td className="px-6 py-5">
+                        <button
+                          onClick={handleOpenVideo}
+                          className="inline-flex items-center gap-2 rounded-2xl border border-black/10 bg-white px-4 py-2 text-[18px] font-medium text-[#ff5148] shadow-sm transition hover:border-[#ffb5b0] hover:bg-[#fff6f5]"
+                        >
+                          <Play size={15} fill="currentColor" />
+                          Watch Live
+                        </button>
+                      </td>
+                      <td className="px-6 py-5 text-[18px] text-[#2c2c2c]">
+                        {activeTruckNumber}
+                      </td>
+                      <td className="px-6 py-5 text-[22px] font-semibold text-[#f4bf22]">
+                        {liveCount}
+                      </td>
+                      <td className="px-6 py-5">
+                        <button
+                          type="button"
+                          className="rounded-full bg-[#c7e3cc] px-4 py-1.5 text-[15px] font-semibold text-[#135c2f]"
+                        >
+                          Live
+                        </button>
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
