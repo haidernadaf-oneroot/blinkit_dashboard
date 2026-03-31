@@ -276,7 +276,7 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
                           {truck.truck_number}
                         </h2>
                         <p className="mt-2 text-sm text-neutral-600">
-                          {formatDate(truck.date)}
+                          {truck.date}
                         </p>
                       </div>
                     </div>
