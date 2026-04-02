@@ -30,6 +30,11 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
   const [date, setDate] = useState("");
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
+  const [stats, setStats] = useState({
+    totalSessions: 0,
+    completed: 0,
+    pendingReports: 0,
+  });
 
   const limit = 5; // you want 1 2 3 4 5 style
 
@@ -75,6 +80,13 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
       const data = await res.json();
       setTrucks(data.data || []);
       setTotal(data.total || 0);
+      setStats(
+        data.stats || {
+          totalSessions: 0,
+          completed: 0,
+          pendingReports: 0,
+        },
+      );
     } catch (err) {
       console.error(err);
     } finally {
@@ -244,7 +256,7 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
                 Total Sessions
               </p>
               <p className="mt-3 text-4xl font-bold text-neutral-950">
-                {trucks.length}
+                {stats.totalSessions}
               </p>
             </div>
 
@@ -253,7 +265,7 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
                 Completed
               </p>
               <p className="mt-3 text-4xl font-bold text-emerald-700">
-                {completedCount}
+                {stats.completed}
               </p>
             </div>
 
@@ -262,7 +274,7 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
                 Pending Reports
               </p>
               <p className="mt-3 text-4xl font-bold text-neutral-950">
-                {pendingCount}
+                {stats.pendingReports}
               </p>
             </div>
           </div>
