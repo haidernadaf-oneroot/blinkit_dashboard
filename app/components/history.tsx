@@ -26,6 +26,12 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
 
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [loading, setLoading] = useState(true);
+  const [truckNumber, setTruckNumber] = useState("");
+  const [date, setDate] = useState("");
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+
+  const limit = 5; // you want 1 2 3 4 5 style
 
   const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
@@ -42,14 +48,21 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
       return;
     }
     fetchTrucks();
-  }, []);
+  }, [page, truckNumber, date]);
 
   async function fetchTrucks() {
     try {
       if (!API_BASE_URL) throw new Error("API not configured");
 
+      const query = new URLSearchParams({
+        ...(truckNumber && { truck_number: truckNumber }),
+        ...(date && { date }),
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+
       const res = await fetch(
-        "https://counting-dashboard-backend-pd3y.onrender.com/totals/counts",
+        `https://counting-dashboard-backend-pd3y.onrender.com/totals/counts?${query.toString()}`,
         {
           method: "GET",
           headers: getAuthHeaders(),
@@ -61,6 +74,7 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
 
       const data = await res.json();
       setTrucks(data.data || []);
+      setTotal(data.total || 0);
     } catch (err) {
       console.error(err);
     } finally {
@@ -187,6 +201,12 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
   ).length;
   const pendingCount = trucks.length - completedCount;
 
+  const clearFilters = () => {
+    setTruckNumber("");
+    setDate("");
+    setPage(1);
+  };
+
   return (
     <div className="min-h-screen">
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -247,6 +267,43 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
             </div>
           </div>
 
+          {/* ✅ FILTER */}
+          <div className="mb-4 flex gap-3 flex-wrap">
+            <input
+              type="text"
+              placeholder="Truck Number"
+              value={truckNumber}
+              onChange={(e) => setTruckNumber(e.target.value)}
+              className="border px-3 py-2 rounded"
+            />
+
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="border px-3 py-2 rounded"
+            />
+
+            <button
+              onClick={() => {
+                setPage(1);
+                fetchTrucks();
+              }}
+              className="bg-black text-white px-4 py-2 rounded"
+            >
+              Apply
+            </button>
+
+            {/* ✅ NEW BUTTON */}
+            <button
+              onClick={clearFilters}
+              className="bg-gray-200 text-black px-4 py-2 rounded"
+            >
+              Clear
+            </button>
+          </div>
+
+          {/* ✅ DATA LIST */}
           <div className="space-y-3">
             {loading ? (
               <div className="flex items-center justify-center gap-3 rounded-[28px] border border-neutral-200 bg-white px-6 py-14 text-neutral-600">
@@ -282,15 +339,6 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
-                      {/* <div className="rounded-2xl bg-amber-100 px-4 py-3">
-                        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-amber-700">
-                          Approved
-                        </p>
-                        <p className="text-2xl font-bold text-amber-950">
-                          {truck.totalApproved}
-                        </p>
-                      </div> */}
-
                       <span
                         className={`rounded-full px-4 py-2 text-sm font-semibold ${
                           truck.sqsCountComplete
@@ -322,6 +370,59 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
                 </div>
               ))
             )}
+          </div>
+          <div className="flex justify-between mt-10">
+            {/* 🔹 LEFT TEXT */}
+            <div className="text-sm text-neutral-600">
+              Showing{" "}
+              <span className="font-semibold">{(page - 1) * limit + 1}</span> to{" "}
+              <span className="font-semibold">
+                {Math.min(page * limit, total)}
+              </span>{" "}
+              of <span className="font-semibold">{total}</span> records
+            </div>
+
+            {/* 🔹 RIGHT PAGINATION */}
+            <div className="flex items-center gap-2">
+              {/* ◀️ */}
+              <button
+                disabled={page === 1}
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                className="px-2 py-1 text-black disabled:opacity-30"
+              >
+                {"<"}
+              </button>
+
+              {/* 🔢 NUMBERS */}
+              {Array.from({ length: Math.ceil(total / limit) }, (_, i) => i + 1)
+                .slice(page - 1, page + 4)
+                .map((p) => (
+                  <button
+                    key={p}
+                    onClick={() => setPage(p)}
+                    className={`px-3 py-1 rounded ${
+                      page === p
+                        ? "bg-black text-white font-semibold"
+                        : "text-neutral-700"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+
+              {/* ▶️ */}
+              <button
+                disabled={page === Math.ceil(total / limit)}
+                onClick={() =>
+                  setPage((prev) =>
+                    Math.min(prev + 1, Math.ceil(total / limit)),
+                  )
+                }
+                className="px-2 py-1 text-black disabled:opacity-30"
+              >
+                {">"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
