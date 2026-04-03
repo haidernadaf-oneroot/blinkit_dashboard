@@ -337,46 +337,51 @@ export default function HistoryPage({ onBack }: { onBack: () => void }) {
                       <div className="rounded-2xl bg-neutral-100 p-3 text-neutral-700">
                         <Truck size={22} />
                       </div>
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">
-                          Truck No.
-                        </p>
-                        <h2 className="mt-1 text-2xl font-bold text-neutral-950">
-                          {truck.truck_number}
-                        </h2>
-                        <p className="mt-2 text-sm text-neutral-600">
-                          {truck.date}
-                        </p>
+                      <div className="flex items-end justify-between">
+                        <div className="flex flex-col space-x-40">
+                          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500 space-x-3">
+                            Truck No.
+                          </p>
+                          <h2 className="mt-1 text-2xl font-bold text-neutral-950">
+                            {truck.truck_number}
+                          </h2>
+                        </div>
+
+                        <p className="text-sm text-neutral-600">{truck.date}</p>
                       </div>
                     </div>
 
                     <div className="flex flex-wrap items-center gap-3">
-                      <span
-                        className={`rounded-full px-4 py-2 text-sm font-semibold ${
-                          truck.sqsCountComplete
-                            ? "bg-emerald-100 text-emerald-700"
-                            : "bg-sky-100 text-sky-700"
-                        }`}
-                      >
-                        {truck.sqsCountComplete ? "Completed" : "Processing"}
-                      </span>
+                      <div className=" mr-40">
+                        <span
+                          className={`rounded-full px-4 py-2 text-sm font-semibold  ${
+                            truck.sqsCountComplete
+                              ? "bg-emerald-100 text-emerald-700"
+                              : "bg-sky-100 text-sky-700"
+                          }`}
+                        >
+                          {truck.sqsCountComplete ? "Completed" : "Processing"}
+                        </span>
+                      </div>
 
-                      {truck.sqsCountComplete ? (
-                        <button
-                          onClick={() => generatePDF(truck)}
-                          className="inline-flex items-center gap-2 rounded-2xl bg-neutral-950 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-neutral-800"
-                        >
-                          <Download size={16} />
-                          Download PDF
-                        </button>
-                      ) : (
-                        <button
-                          disabled
-                          className="rounded-2xl bg-neutral-200 px-5 py-3 text-sm font-semibold text-neutral-500"
-                        >
-                          Please Wait
-                        </button>
-                      )}
+                      <div className="w-44">
+                        {truck.sqsCountComplete ? (
+                          <button
+                            onClick={() => generatePDF(truck)}
+                            className="inline-flex items-center gap-2 rounded-2xl bg-neutral-950 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-neutral-800"
+                          >
+                            <Download size={16} />
+                            Download PDF
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="rounded-2xl bg-neutral-200 px-5 py-3 text-sm font-semibold text-neutral-500"
+                          >
+                            Please Wait
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
