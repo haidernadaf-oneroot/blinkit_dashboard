@@ -13,7 +13,6 @@ import {
   Video,
   X,
 } from "lucide-react";
-import HistoryPage from "../components/history";
 
 type TruckData = {
   _id: string;
@@ -208,7 +207,7 @@ export default function DashboardPage() {
                 Live Ops
               </button>
               <button
-                onClick={() => setShowHistoryPage(true)}
+                onClick={() => router.push("/history")}
                 className="rounded-full border border-black/10 bg-white px-7 py-3 text-sm font-medium text-black transition hover:border-black/20"
               >
                 History
